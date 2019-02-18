@@ -1,0 +1,15 @@
+= Drinking from the Stream: How to use messaging platforms for scalability & performance
+
+== Maintainer
+
+* Mark Heckler
+* mailto:mark@thehecklers.org[mark@thehecklers.org]
+* https://twitter.com/mkheck[@mkheck on Twitter]
+
+== Purpose
+
+This multi-repo accompanies my session titled *"Drinking from the Stream: How to use messaging platforms for scalability & performance"* and includes all code written within the session and potentially more...star+watch this repo for updates!
+
+== Related presentation
+
+https://speakerdeck.com/mkheck/drinking-from-the-stream["Drinking from the Stream: How to use messaging platforms for scalability & performance" presentation]
