@@ -12,4 +12,4 @@ This multi-repo accompanies my session titled *"Drinking from the Stream: How to
 
 == Related presentation
 
-https://speakerdeck.com/mkheck/drinking-from-the-stream["Drinking from the Stream: How to use messaging platforms for scalability & performance" presentation]
+https://speakerdeck.com/mkheck/drinking-from-the-stream-how-to-use-messaging-platforms-for-scalability-and-performance["Drinking from the Stream: How to use messaging platforms for scalability & performance" presentation]
