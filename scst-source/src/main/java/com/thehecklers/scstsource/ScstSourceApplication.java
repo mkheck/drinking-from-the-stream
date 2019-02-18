@@ -1,0 +1,65 @@
+package com.thehecklers.scstsource;
+
+import lombok.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.messaging.Source;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.util.Random;
+import java.util.UUID;
+
+@EnableBinding(Source.class)
+@EnableScheduling
+@SpringBootApplication
+public class ScstSourceApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(ScstSourceApplication.class, args);
+    }
+
+}
+
+@Component
+class Spammer {
+    private final Source source;
+    private final SubscriberGenerator generator;
+
+    Spammer(Source source, SubscriberGenerator generator) {
+        this.source = source;
+        this.generator = generator;
+    }
+
+    @Scheduled(fixedRate = 1000)
+    private void spam() {
+        Subscriber sub = generator.generate();
+        System.out.println(sub);
+        source.output().send(MessageBuilder.withPayload(sub).build());
+    }
+}
+
+
+@Component
+class SubscriberGenerator {
+    private final String[] firstNames = "Alpha, Bravo, Charlie, Delta, Foxtrot, Golf, Hotel, Indigo".split(", ");
+    private final String[] lastNames = "Alpha, Bravo, Charlie, Delta, Foxtrot, Golf, Hotel, Indigo".split(", ");
+
+    Subscriber generate() {
+        int i = new Random().nextInt(8);
+        int j = new Random().nextInt(8);
+
+        return new Subscriber(UUID.randomUUID().toString(), firstNames[i], lastNames[j], Instant.now());
+    }
+}
+
+
+@Value
+class Subscriber {
+    private final String id, firstName, lastName;
+    private final Instant subscribeDate;
+}
