@@ -43,7 +43,6 @@ class Spammer {
     }
 }
 
-
 @Component
 class SubscriberGenerator {
     private final String[] firstNames = "Alpha, Bravo, Charlie, Delta, Foxtrot, Golf, Hotel, Indigo".split(", ");
@@ -56,7 +55,6 @@ class SubscriberGenerator {
         return new Subscriber(UUID.randomUUID().toString(), firstNames[i], lastNames[j], Instant.now());
     }
 }
-
 
 @Value
 class Subscriber {
