@@ -47,10 +47,12 @@ class Spammer {
 class SubscriberGenerator {
     private final String[] firstNames = "Alpha, Bravo, Charlie, Delta, Foxtrot, Golf, Hotel, Indigo".split(", ");
     private final String[] lastNames = "Alpha, Bravo, Charlie, Delta, Foxtrot, Golf, Hotel, Indigo".split(", ");
+    private final Random rnd = new Random();
+    int i, j;
 
     Subscriber generate() {
-        int i = new Random().nextInt(8);
-        int j = new Random().nextInt(8);
+        i = rnd.nextInt(8);
+        j = rnd.nextInt(8);
 
         return new Subscriber(UUID.randomUUID().toString(), firstNames[i], lastNames[j], Instant.now());
     }
