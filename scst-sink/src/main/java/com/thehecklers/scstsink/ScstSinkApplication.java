@@ -28,10 +28,6 @@ class Catcher {
 		System.out.println(sub);
 	}
 
-//	@StreamListener(Sink.INPUT)
-//	void anotherRoute(Subscriber subscriber) {
-//		// doSomethingElse();
-//	}
 }
 
 @Value

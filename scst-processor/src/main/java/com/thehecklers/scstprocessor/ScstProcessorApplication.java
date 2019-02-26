@@ -12,7 +12,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 
 import java.time.Instant;
 
-@EnableBinding(Processor.class)
 @SpringBootApplication
 public class ScstProcessorApplication {
 
@@ -22,13 +21,9 @@ public class ScstProcessorApplication {
 
 }
 
+@EnableBinding(Processor.class)
 @MessageEndpoint
 class Transformer {
-    private final Processor processor;
-
-    Transformer(Processor processor) {
-        this.processor = processor;
-    }
 
     @StreamListener(Processor.INPUT)
     @SendTo(Processor.OUTPUT)
