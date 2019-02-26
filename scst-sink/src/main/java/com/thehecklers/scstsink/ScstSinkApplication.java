@@ -10,7 +10,6 @@ import org.springframework.integration.annotation.MessageEndpoint;
 
 import java.time.Instant;
 
-@EnableBinding(Sink.class)
 @SpringBootApplication
 public class ScstSinkApplication {
 
@@ -20,6 +19,7 @@ public class ScstSinkApplication {
 
 }
 
+@EnableBinding(Sink.class)
 @MessageEndpoint
 class Catcher {
 
