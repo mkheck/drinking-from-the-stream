@@ -14,8 +14,6 @@ import java.time.Instant;
 import java.util.Random;
 import java.util.UUID;
 
-@EnableBinding(Source.class)
-@EnableScheduling
 @SpringBootApplication
 public class ScstSourceApplication {
 
@@ -25,7 +23,8 @@ public class ScstSourceApplication {
 
 }
 
-@Component
+@EnableBinding(Source.class)
+@EnableScheduling
 class Spammer {
     private final Source source;
     private final SubscriberGenerator generator;
