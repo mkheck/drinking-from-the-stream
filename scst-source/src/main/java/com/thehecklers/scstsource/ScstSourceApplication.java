@@ -47,7 +47,7 @@ class SubscriberGenerator {
     private final String[] firstNames = "Alpha, Bravo, Charlie, Delta, Foxtrot, Golf, Hotel, Indigo".split(", ");
     private final String[] lastNames = "Alpha, Bravo, Charlie, Delta, Foxtrot, Golf, Hotel, Indigo".split(", ");
     private final Random rnd = new Random();
-    private int i, j;
+    private int i = 0, j = 0;
 
     Subscriber generate() {
         i = rnd.nextInt(8);
