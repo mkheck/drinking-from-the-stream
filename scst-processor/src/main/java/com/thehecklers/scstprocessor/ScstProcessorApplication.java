@@ -1,5 +1,7 @@
 package com.thehecklers.scstprocessor;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Value;
 import org.apache.tomcat.jni.Proc;
 import org.springframework.boot.SpringApplication;
@@ -40,7 +42,8 @@ class Transformer {
     }
 }
 
-@Value
+@Data
+@AllArgsConstructor
 class Subscriber {
     private final String id, firstName, lastName;
     private final Instant subscribeDate;

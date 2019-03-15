@@ -1,5 +1,7 @@
 package com.thehecklers.scstsink;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,9 +15,9 @@ import java.time.Instant;
 @SpringBootApplication
 public class ScstSinkApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ScstSinkApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ScstSinkApplication.class, args);
+    }
 
 }
 
@@ -23,15 +25,16 @@ public class ScstSinkApplication {
 @MessageEndpoint
 class Catcher {
 
-	@StreamListener(Sink.INPUT)
-	void logMessage(Subscriber sub) {
-		System.out.println(sub);
-	}
+    @StreamListener(Sink.INPUT)
+    void logMessage(Subscriber sub) {
+        System.out.println(sub);
+    }
 
 }
 
-@Value
+@Data
+@AllArgsConstructor
 class Subscriber {
-	private final String id, firstName, lastName;
-	private final Instant subscribeDate;
+    private final String id, firstName, lastName;
+    private final Instant subscribeDate;
 }

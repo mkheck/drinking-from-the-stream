@@ -1,5 +1,7 @@
 package com.thehecklers.scstsource;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -57,7 +59,8 @@ class SubscriberGenerator {
     }
 }
 
-@Value
+@Data
+@AllArgsConstructor
 class Subscriber {
     private final String id, firstName, lastName;
     private final Instant subscribeDate;
