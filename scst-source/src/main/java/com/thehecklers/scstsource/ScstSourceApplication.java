@@ -27,14 +27,10 @@ public class ScstSourceApplication {
 
 @EnableBinding(Source.class)
 @EnableScheduling
+@AllArgsConstructor
 class Spammer {
     private final Source source;
     private final SubscriberGenerator generator;
-
-    Spammer(Source source, SubscriberGenerator generator) {
-        this.source = source;
-        this.generator = generator;
-    }
 
     @Scheduled(fixedRate = 1000)
     private void spam() {
