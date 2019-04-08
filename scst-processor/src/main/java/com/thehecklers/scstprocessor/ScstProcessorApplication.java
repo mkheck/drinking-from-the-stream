@@ -13,6 +13,7 @@ import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import java.time.Instant;
+import java.util.Random;
 
 @SpringBootApplication
 public class ScstProcessorApplication {
@@ -25,26 +26,37 @@ public class ScstProcessorApplication {
 
 @EnableBinding(Processor.class)
 @MessageEndpoint
-class Transformer {
+class CoffeeTransformer {
+    private final Random rnd = new Random();
 
     @StreamListener(Processor.INPUT)
     @SendTo(Processor.OUTPUT)
-    Subscriber transform(Subscriber sub) {
+    RetailCoffee transform(WholesaleCoffee wCoffee) {
 
-        Subscriber newSub = new Subscriber(sub.getId(),
-                sub.getFirstName().toUpperCase(),
-                sub.getLastName().toUpperCase(),
-                sub.getSubscribeDate());
+        RetailCoffee rCoffee = new RetailCoffee(wCoffee.getId(),
+                wCoffee.getName(),
+                rnd.nextInt(2) == 0 ? RetailCoffee.CoffeeState.WHOLE_BEAN : RetailCoffee.CoffeeState.GROUND);
 
-        System.out.println(newSub);
+        System.out.println(rCoffee);
 
-        return newSub;
+        return rCoffee;
     }
 }
 
 @Data
 @AllArgsConstructor
-class Subscriber {
-    private final String id, firstName, lastName;
-    private final Instant subscribeDate;
+class RetailCoffee {
+    enum CoffeeState {
+        WHOLE_BEAN,
+        GROUND
+    }
+
+    private String id, name;
+    private CoffeeState state;
+}
+
+@Data
+@AllArgsConstructor
+class WholesaleCoffee {
+    private final String id, name;
 }

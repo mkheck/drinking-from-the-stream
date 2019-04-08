@@ -23,18 +23,23 @@ public class ScstSinkApplication {
 
 @EnableBinding(Sink.class)
 @MessageEndpoint
-class Catcher {
+class CoffeeDrinker {
 
     @StreamListener(Sink.INPUT)
-    void logMessage(Subscriber sub) {
-        System.out.println(sub);
+    private void drink(RetailCoffee coffee) {
+        System.out.println(coffee);
     }
 
 }
 
 @Data
 @AllArgsConstructor
-class Subscriber {
-    private final String id, firstName, lastName;
-    private final Instant subscribeDate;
+class RetailCoffee {
+    enum CoffeeState {
+        WHOLE_BEAN,
+        GROUND
+    }
+
+    private String id, name;
+    private CoffeeState state;
 }

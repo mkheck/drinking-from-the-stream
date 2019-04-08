@@ -30,36 +30,34 @@ public class ScstSourceApplication {
 @EnableBinding(Source.class)
 @EnableScheduling
 @AllArgsConstructor
-class Spammer {
+class CoffeeSender {
     private final Source source;
-    private final SubscriberGenerator generator;
+    private final CoffeeGenerator generator;
 
     @Scheduled(fixedRate = 1000)
-    private void spam() {
-        Subscriber sub = generator.generate();
-        System.out.println(sub);
-        source.output().send(MessageBuilder.withPayload(sub).build());
+    private void send() {
+        WholesaleCoffee coffee = generator.generate();
+
+        System.out.println(coffee);
+        source.output().send(MessageBuilder.withPayload(coffee).build());
     }
 }
 
 @Component
-class SubscriberGenerator {
-    private final String[] firstNames = "Alpha, Bravo, Charlie, Delta, Foxtrot, Golf, Hotel, Indigo".split(", ");
-    private final String[] lastNames = "Alpha, Bravo, Charlie, Delta, Foxtrot, Golf, Hotel, Indigo".split(", ");
+class CoffeeGenerator {
+    private final String[] names = "Kaldi's, Kona, Peruvian, Cereza, Sumatra".split(", ");
     private final Random rnd = new Random();
-    private int i = 0, j = 0;
+    private int i = 0;
 
-    Subscriber generate() {
-        i = rnd.nextInt(8);
-        j = rnd.nextInt(8);
+    WholesaleCoffee generate() {
+        i = rnd.nextInt(5);
 
-        return new Subscriber(UUID.randomUUID().toString(), firstNames[i], lastNames[j], Instant.now());
+        return new WholesaleCoffee(UUID.randomUUID().toString(), names[i]);
     }
 }
 
 @Data
 @AllArgsConstructor
-class Subscriber {
-    private final String id, firstName, lastName;
-    private final Instant subscribeDate;
+class WholesaleCoffee {
+    private final String id, name;
 }
