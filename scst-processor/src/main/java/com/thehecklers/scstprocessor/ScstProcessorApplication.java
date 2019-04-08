@@ -2,8 +2,6 @@ package com.thehecklers.scstprocessor;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Value;
-import org.apache.tomcat.jni.Proc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -12,7 +10,6 @@ import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.messaging.handler.annotation.SendTo;
 
-import java.time.Instant;
 import java.util.Random;
 
 @SpringBootApplication
