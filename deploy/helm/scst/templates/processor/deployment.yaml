@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "scst.fullname" . }}-processor
+  labels:
+    app.kubernetes.io/name: {{ include "scst.name" . }}-processor
+    helm.sh/chart: {{ include "scst.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.processor.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "scst.name" . }}-processor
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "scst.name" . }}-processor
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.processor.image.repository }}:{{ .Values.processor.image.tag }}"
+          imagePullPolicy: {{ .Values.processor.image.pullPolicy }}
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS
+              value: "{{ .Release.Name }}-kafka:9092"
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+            - name: KUBERNETES_TRUST_CERTIFICATES
+              value: "true"
+            - name: SPRING_RABBITMQ_HOST
+              value: "{{ .Release.Name }}-rabbitmq-ha"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "{{ .Values.rabbitmq.username }}"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "{{ .Values.rabbitmq.password }}"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          # livenessProbe:
+            # httpGet:
+              # path: /
+              # port: http
+          # readinessProbe:
+            # httpGet:
+              # path: /
+              # port: http
+          reprocessors:
+            {{- toYaml .Values.reprocessors | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

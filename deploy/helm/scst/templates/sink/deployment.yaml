@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "scst.fullname" . }}-sink
+  labels:
+    app.kubernetes.io/name: {{ include "scst.name" . }}-sink
+    helm.sh/chart: {{ include "scst.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.sink.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "scst.name" . }}-sink
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "scst.name" . }}-sink
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.sink.image.repository }}:{{ .Values.sink.image.tag }}"
+          imagePullPolicy: {{ .Values.sink.image.pullPolicy }}
+          env:
+            - name: SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS
+              value: "{{ .Release.Name }}-kafka:9092"
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+            - name: KUBERNETES_TRUST_CERTIFICATES
+              value: "true"
+            - name: SERVER_PORT
+              value: "8080"
+            - name: SPRING_RABBITMQ_HOST
+              value: "{{ .Release.Name }}-rabbitmq-ha"
+            - name: SPRING_RABBITMQ_USERNAME
+              value: "user"
+            - name: SPRING_RABBITMQ_PASSWORD
+              value: "coffee"
+            - name: SPRING_RABBITMQ_PORT
+              value: "5672"
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          # livenessProbe:
+            # httpGet:
+              # path: /
+              # port: http
+          # readinessProbe:
+            # httpGet:
+              # path: /
+              # port: http
+          resinks:
+            {{- toYaml .Values.resinks | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
