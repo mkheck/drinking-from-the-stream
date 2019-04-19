@@ -1,0 +1,15 @@
+dependencies:
+- name: kafka
+  repository: https://charts.bitnami.com
+  version: 1.9.0
+- name: rabbitmq-ha
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 1.23.0
+- name: prometheus
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 8.3.0
+- name: grafana
+  repository: https://kubernetes-charts.storage.googleapis.com
+  version: 1.21.2
+digest: sha256:124b028f03e8f329300961f6415216dc2d701c9132ef073f5a71317c850a6795
+generated: 2019-04-09T08:50:17.670337602-05:00

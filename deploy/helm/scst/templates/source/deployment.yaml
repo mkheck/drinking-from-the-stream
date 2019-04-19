@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "scst.fullname" . }}-source
+  labels:
+    app.kubernetes.io/name: {{ include "scst.name" . }}-source
+    helm.sh/chart: {{ include "scst.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.source.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "scst.name" . }}-source
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "scst.name" . }}-source
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app: {{ include "scst.name" . }}-source
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
+    spec:
+      serviceAccount: {{ include "scst.fullname" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.source.image.repository }}:{{ .Values.source.image.tag }}"
+          imagePullPolicy: {{ .Values.source.image.pullPolicy }}
+          env:
+            - name: SPRING_CLOUD_KUBERNETES_CONFIG_NAME
+              value: "{{ include "scst.fullname" . }}-source"
+            - name: SPRING_PROFILES_ACTIVE
+              value: kubernetes
+            - name: SPRING_RABBITMQ_HOST
+              value: "{{ .Release.Name }}-rabbitmq-ha"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          # livenessProbe:
+            # httpGet:
+              # path: /actuator/health
+              # port: http
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

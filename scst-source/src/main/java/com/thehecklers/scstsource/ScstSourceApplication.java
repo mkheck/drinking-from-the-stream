@@ -10,6 +10,9 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import javax.annotation.PostConstruct;
 
 import java.util.Random;
 import java.util.UUID;
@@ -40,15 +43,26 @@ class CoffeeSender {
 }
 
 @Component
+@RefreshScope
 class CoffeeGenerator {
-    private final String[] names = "Kaldi's, Kona, Peruvian, Cereza, Sumatra".split(", ");
+    @Value("${names:a,b,c,d,e,f}")
+    private String[] names;
+
+    // "Kaldi's, Kona, Peruvian, Cereza, Sumatra".split(", ");
     private final Random rnd = new Random();
     private int i = 0;
 
-    WholesaleCoffee generate() {
-        i = rnd.nextInt(5);
+    @PostConstruct
+    private void showConfig() {
+        System.out.println("List of Available Coffees: " + String.join(",", names));
+    }
 
-        return new WholesaleCoffee(UUID.randomUUID().toString(), names[i]);
+    WholesaleCoffee generate() {
+        i = rnd.nextInt(names.length);
+
+        WholesaleCoffee wCoffee = new WholesaleCoffee(UUID.randomUUID().toString(), names[i]);
+        //System.out.println(wCoffee);
+        return wCoffee;
     }
 }
 

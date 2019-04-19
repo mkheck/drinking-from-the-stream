@@ -22,7 +22,7 @@ public class ScstSinkApplication {
 @MessageEndpoint
 class CoffeeDrinker {
 
-    @StreamListener(Sink.INPUT)
+    @StreamListener(value = Sink.INPUT)
     private void drink(RetailCoffee coffee) {
         System.out.println(coffee);
     }

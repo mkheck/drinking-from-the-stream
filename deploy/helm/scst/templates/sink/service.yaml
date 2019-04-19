@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "scst.fullname" . }}-sink
+  labels:
+    app.kubernetes.io/name: {{ include "scst.name" . }}-sink
+    helm.sh/chart: {{ include "scst.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "scst.name" . }}-sink
+    app.kubernetes.io/instance: {{ .Release.Name }}

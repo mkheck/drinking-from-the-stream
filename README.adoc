@@ -17,3 +17,46 @@ https://github.com/mkheck/LocalMessaging[Scripts I use to create, configure, & r
 == Related presentation
 
 https://speakerdeck.com/mkheck/drinking-from-the-stream-how-to-use-messaging-platforms-for-scalability-and-performance["Drinking from the Stream: How to use messaging platforms for scalability & performance" presentation]
+
+== Build and Run
+
+=== Build
+
+You can build .jar files like so:
+
+```bash
+mvn clean package -f scst-source/pom.xml
+mvn clean package -f scst-processor/pom.xml
+mvn clean package -f scst-/pom.xml
+```
+
+=== Run
+
+Due to dependencies on Kafka and RabbitMQ it is
+recommended that you use docker-compose to run the
+apps:
+
+```bash
+docker-compose up -d
+```
+
+It will take a few minutes to start and then you can
+view the docker logs to see the coffee get processed:
+
+```bash
+docker-compose logs -f source processor sink
+```
+
+You should see output that looks like this:
+
+```bash
+source_1     | WholesaleCoffee(id=74cceff9-97bd-45aa-8458-76cc00b770c1, name=Kaldi's)
+processor_1  | RetailCoffee(id=74cceff9-97bd-45aa-8458-76cc00b770c1, name=Kaldi's, state=WHOLE_BEAN)
+sink_1       | RetailCoffee(id=74cceff9-97bd-45aa-8458-76cc00b770c1, name=Kaldi's, state=WHOLE_BEAN)
+source_1     | WholesaleCoffee(id=5494c658-f673-4008-8aa0-5cdc77e3ec8a, name=Cereza)
+processor_1  | RetailCoffee(id=5494c658-f673-4008-8aa0-5cdc77e3ec8a, name=Cereza, state=WHOLE_BEAN)
+sink_1       | RetailCoffee(id=5494c658-f673-4008-8aa0-5cdc77e3ec8a, name=Cereza, state=WHOLE_BEAN)
+source_1     | WholesaleCoffee(id=f8850d88-b1ae-40db-b625-3ebb878571a1, name=Sumatra)
+processor_1  | RetailCoffee(id=f8850d88-b1ae-40db-b625-3ebb878571a1, name=Sumatra, state=WHOLE_BEAN)
+sink_1       | RetailCoffee(id=f8850d88-b1ae-40db-b625-3ebb878571a1, name=Sumatra, state=WHOLE_BEAN)
+```
