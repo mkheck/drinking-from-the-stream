@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "scst.fullname" . }}-source
+data:
+  application.yml: |
+    names: Starbucks,Caribou,Peets,Seattle's Best
+    # names: Truth,Haas,Deluxe,Motherland,Bean There,Kamili

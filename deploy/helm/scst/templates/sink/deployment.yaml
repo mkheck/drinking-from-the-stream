@@ -18,41 +18,36 @@ spec:
       labels:
         app.kubernetes.io/name: {{ include "scst.name" . }}-sink
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app: {{ include "scst.name" . }}-sink
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "8080"
     spec:
+      serviceAccount: {{ include "scst.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.sink.image.repository }}:{{ .Values.sink.image.tag }}"
           imagePullPolicy: {{ .Values.sink.image.pullPolicy }}
           env:
+            - name: SPRING_CLOUD_KUBERNETES_CONFIG_NAME
+              value: "{{ include "scst.fullname" . }}-sink"
             - name: SPRING_CLOUD_STREAM_KAFKA_BINDER_BROKERS
               value: "{{ .Release.Name }}-kafka:9092"
             - name: SPRING_PROFILES_ACTIVE
               value: kubernetes
-            - name: KUBERNETES_TRUST_CERTIFICATES
-              value: "true"
-            - name: SERVER_PORT
-              value: "8080"
-            - name: SPRING_RABBITMQ_HOST
-              value: "{{ .Release.Name }}-rabbitmq-ha"
-            - name: SPRING_RABBITMQ_USERNAME
-              value: "user"
-            - name: SPRING_RABBITMQ_PASSWORD
-              value: "coffee"
-            - name: SPRING_RABBITMQ_PORT
-              value: "5672"
-
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           # livenessProbe:
             # httpGet:
-              # path: /
+              # path: /actuator/health
               # port: http
-          # readinessProbe:
-            # httpGet:
-              # path: /
-              # port: http
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: http
           resinks:
             {{- toYaml .Values.resinks | nindent 12 }}
       {{- with .Values.nodeSelector }}

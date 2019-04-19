@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "scst.fullname" . }}-sink
+data:
+  application.yml: |
+    #management.endpoint.health.show-details: always
+    management.endpoints.web.exposure.include: "prometheus,health,info"

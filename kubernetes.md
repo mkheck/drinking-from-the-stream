@@ -5,15 +5,15 @@
 > Note: you can use our prebuilt images at `paulczar/scst-source`, `paulczar/scst-processor` and `paulczar/scst-sink`.
 
 ```bash
-$ mvn compile com.google.cloud.tools:jib-maven-plugin:1.0.2:dockerBuild \
+mvn compile com.google.cloud.tools:jib-maven-plugin:1.0.2:dockerBuild \
   -f scst-processor/pom.xml \
   -Dimage=paulczar/scst-processor:0.0.1-SNAPSHOT
 
-$ mvn compile com.google.cloud.tools:jib-maven-plugin:1.0.2:dockerBuild \
+mvn compile com.google.cloud.tools:jib-maven-plugin:1.0.2:dockerBuild \
   -f scst-sink/pom.xml \
   -Dimage=paulczar/scst-sink:0.0.1-SNAPSHOT
 
-$ mvn compile com.google.cloud.tools:jib-maven-plugin:1.0.2:dockerBuild \
+mvn compile com.google.cloud.tools:jib-maven-plugin:1.0.2:dockerBuild \
   -f scst-source/pom.xml \
   -Dimage=paulczar/scst-source:0.0.1-SNAPSHOT
 

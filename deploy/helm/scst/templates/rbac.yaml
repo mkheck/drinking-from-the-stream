@@ -1,0 +1,73 @@
+{{- if .Values.rbac.enabled }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "scst.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "scst.name" . }}
+    helm.sh/chart: {{ include "scst.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "scst.fullname" . }}-config
+  labels:
+    app.kubernetes.io/name: {{ include "scst.name" . }}
+    helm.sh/chart: {{ include "scst.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "watch", "list"]
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "scst.fullname" . }}-sd
+  labels:
+    app.kubernetes.io/name: {{ include "scst.name" . }}
+    helm.sh/chart: {{ include "scst.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+rules:
+- apiGroups: [""]
+  resources: ["services", "pods", "endpoints"]
+  verbs: ["get", "watch", "list"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "scst.fullname" . }}-sd
+  labels:
+    app.kubernetes.io/name: {{ include "scst.name" . }}
+    helm.sh/chart: {{ include "scst.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "scst.fullname" . }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "scst.fullname" . }}-sd
+  apiGroup: rbac.authorization.k8s.io
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "scst.fullname" . }}-config
+  labels:
+    app.kubernetes.io/name: {{ include "scst.name" . }}
+    helm.sh/chart: {{ include "scst.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "scst.fullname" . }}
+roleRef:
+  kind: Role
+  name: {{ include "scst.fullname" . }}-config
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

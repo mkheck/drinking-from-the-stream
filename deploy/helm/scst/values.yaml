@@ -2,13 +2,14 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-
 sink:
   image:
     repository: paulczar/scst-sink
     tag: 0.0.1-SNAPSHOT
     pullPolicy: Always
   replicaCount: 1
+  config: |-
+    # config settings loaded from values
 
 source:
   image:
@@ -16,17 +17,26 @@ source:
     tag: 0.0.1-SNAPSHOT
     pullPolicy: Always
   replicaCount: 1
-
+  config: |-
+    # config settings loaded from values
 processor:
   image:
     repository: paulczar/scst-processor
     tag: 0.0.1-SNAPSHOT
     pullPolicy: Always
   replicaCount: 1
+  config: |-
+    # config settings loaded from values
+
+prometheus:
+  enabled: true
 
 
 nameOverride: ""
 fullnameOverride: ""
+
+rbac:
+  enabled: true
 
 service:
   type: ClusterIP
@@ -35,15 +45,19 @@ service:
 ingress:
   enabled: false
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-  paths: []
+  paths:
+    - path: /source
+      service: source
+    - path: /processor
+      service: processor
+    - path: /sink
+      service: sink
   hosts:
-    - chart-example.local
+    - cofee.demo.paulczar.wtf
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+#  - secretName: coffee-tls
+#    hosts:
+#      - cofee.demo.paulczar.wtf
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -74,6 +88,9 @@ kafka:
   persistence:
     enabled: false
 #  advertisedListeners: PLAINTEXT://coffee-kafka:9092
+  zookeeper:
+    persistence:
+      enabled: false
 
 zookeeper:
   persistence:
