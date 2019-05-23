@@ -27,7 +27,7 @@ You can build .jar files like so:
 ```bash
 mvn clean package -f scst-source/pom.xml
 mvn clean package -f scst-processor/pom.xml
-mvn clean package -f scst-/pom.xml
+mvn clean package -f scst-sink/pom.xml
 ```
 
 === Run
