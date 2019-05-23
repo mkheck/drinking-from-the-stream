@@ -48,7 +48,6 @@ class CoffeeGenerator {
     @Value("${names:a,b,c,d,e,f}")
     private String[] names;
 
-    // "Kaldi's, Kona, Peruvian, Cereza, Sumatra".split(", ");
     private final Random rnd = new Random();
     private int i = 0;
 
@@ -61,7 +60,6 @@ class CoffeeGenerator {
         i = rnd.nextInt(names.length);
 
         WholesaleCoffee wCoffee = new WholesaleCoffee(UUID.randomUUID().toString(), names[i]);
-        //System.out.println(wCoffee);
         return wCoffee;
     }
 }
