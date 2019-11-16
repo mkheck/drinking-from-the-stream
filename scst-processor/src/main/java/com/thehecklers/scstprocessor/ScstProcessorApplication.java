@@ -7,10 +7,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Processor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.messaging.handler.annotation.SendTo;
 
 import java.util.Random;
+import java.util.function.Function;
 
 @SpringBootApplication
 public class ScstProcessorApplication {
@@ -21,6 +24,7 @@ public class ScstProcessorApplication {
 
 }
 
+/*  Legacy Spring Cloud Stream API
 @EnableBinding(Processor.class)
 @MessageEndpoint
 class CoffeeTransformer {
@@ -32,24 +36,53 @@ class CoffeeTransformer {
 
         RetailCoffee rCoffee = new RetailCoffee(wCoffee.getId(),
                 wCoffee.getName(),
-                rnd.nextInt(2) == 0 ? RetailCoffee.CoffeeState.WHOLE_BEAN : RetailCoffee.CoffeeState.GROUND);
+                rnd.nextInt(2) == 0
+                        ? RetailCoffee.State.WHOLE_BEAN
+                        : RetailCoffee.State.GROUND);
 
         System.out.println(rCoffee);
 
         return rCoffee;
     }
 }
+*/
+
+@Configuration
+class CoffeeRoaster {
+    private final Random rnd = new Random();
+
+    @Bean
+    Function<WholesaleCoffee, RetailCoffee> processIt() {
+        return wCoffee -> {
+            RetailCoffee rCoffee = new RetailCoffee(wCoffee.getId(),
+                    wCoffee.getName(),
+                    rnd.nextInt(2) == 0
+                            ? RetailCoffee.State.WHOLE_BEAN
+                            : RetailCoffee.State.GROUND);
+
+            System.out.println(rCoffee);
+            return rCoffee;
+        };
+    }
+
+    @Bean
+    Function<RetailCoffee, RetailCoffee> fixIt() {
+        return coffee -> new RetailCoffee(coffee.getId(),
+                coffee.getName(),
+                RetailCoffee.State.WHOLE_BEAN);
+    }
+}
 
 @Data
 @AllArgsConstructor
 class RetailCoffee {
-    enum CoffeeState {
+    enum State {
         WHOLE_BEAN,
         GROUND
     }
 
     private String id, name;
-    private CoffeeState state;
+    private State state;
 }
 
 @Data
